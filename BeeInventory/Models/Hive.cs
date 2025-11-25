@@ -33,5 +33,63 @@ namespace BeeInventory.Models
         public int EggCareBees => bees.Count(b => b.Job == "Egg Care");
 
 
+        //methods used by Queen
+        public string AssignBee(string job)
+        {
+            var unassigned = bees.OfType<WorkerBee>().FirstOrDefault(bees => bees.Job == "Idle");
+            if (unassigned is null)
+            {
+                return "No unassigned bees are available.";
+            }
+            else
+            {
+                unassigned.AssignJob(job);
+                AddNewWorker();
+                return $"A bee has been assigned to {job}.";
+            }
+        }
+
+        private void AddNewWorker()
+        {
+            if (Eggs >= 1)
+            {
+                bees.Add(new WorkerBee("Idle"));
+                Eggs--;
+            }
+        }
+
+        public string WorkTheNextShift()
+        {
+            ShiftNumber++;
+            var report = new StringBuilder();
+            report.AppendLine($"--- Shift #{ShiftNumber} Report ---");
+
+            foreach(var bee in bees)
+            {
+                Honey -= bee.HoneyConsumptionRate;
+            }
+            if (Honey < 0)
+            {
+                report.AppendLine("The hive has run out of honey and the bees are starving.");
+                report.AppendLine(BuildCountsReport());
+                return report.ToString();
+            }
+
+            // Bees do thier work for the shift
+            foreach (var worker in bees.OfType<WorkerBee>())
+            {
+                report.AppendLine(worker.Work(this));
+            }
+            {
+                report.AppendLine(worker.Work(this));
+            }
+
+            // End of shift status
+            report.AppendLine();
+            report.AppendLine(BuildCountsReport());
+            
+            return report.ToString();  
+        }
+
     }
 }
