@@ -1,9 +1,9 @@
-﻿namespace BeeInventory
+﻿namespace BeeInventory.Models
 {
     public class Queen
     {
         public void AssignBee(string selection) { }
-        public void WorkTheNextShift() { }
+        public bool WorkTheNextShift() => false;
         public string StatusReport { get; set; } = " ";
     }
 }

@@ -21,7 +21,7 @@
                 <button class="btn btn-outline-primary" @onclick="()=>queen.AssignBee(selectedJob)">Assign this job to bee</button>    
             </div>
             <div class="row mt-5">
-                <button class="btn btn-outline-danger" onclick="()=>WorkTheNextShift()">Start the next shift</button>
+                <button class="btn btn-outline-danger" diabled="@outOfHoney" onclick="()=> outOfHoney = !queen.WorkTheNextShift()">Start the next shift</button>
             </div>
         </div>
         <div class="col-1 "></div>
@@ -30,6 +30,7 @@
                 <h1>Queen's Report</h1>
             </div>
             <div class="row">
+                
                 <textarea class="row" rows="12" cols="50" value="@queen.StatusReport" readonly></textarea>
             </div>
          </div>
@@ -38,6 +39,32 @@
 </div>
 
 @code {
+    bool outOfHoney = true;
     Queen queen = new Queen();
     string selectedJob = "Nector Collector";
+
+@using System.Timers
+    private Timer timer = new Timer(1000);
+
+
+    protected override void OnInitialized()
+    {
+        timer = new Timer(1500);
+        timer.Elapsed += Timer_Elapsed;
+        timer.Start();
+
+    }
+    private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+    {
+        InvokeAsync(() =>
+        {
+            if (!outOfHoney)
+            {
+                outOfHoney = !queen.WorkTheNextShift();
+                StateHasChanged();
+            }
+        });
+    }
+
+
 }
