@@ -1,72 +1,93 @@
 ﻿@page "/"
+@using BeeInventory.Models
 
-<PageTitle>Home</PageTitle>
+<h1>Beehive Management System</h1>
 
+<h3>Job Assignments</h3>
 
-<div class="container">
-    <div class="row">
-        <div class="col-4 ">
-            <div class="row">
-                 <h1>Job Assignment</h1>
-            </div>
-            <div class="row mt-5">
-                Nector Collector:
-            </div>
-            <select type="row mt-4" class="form-control mt-2" @bind="selectedJob">
-                <option value="Nectar Collector">Nectar Collector</option>
-                <option value="Honey Manufacturer">Honey Manufacturer</option>
-                <option value="Egg Care">Egg Care</option>
-            </select>
-            <div class="row mt-5">
-                <button class="btn btn-outline-primary" @onclick="()=>queen.AssignBee(selectedJob)">Assign this job to bee</button>    
-            </div>
-            <div class="row mt-5">
-                <button class="btn btn-outline-danger" diabled="@outOfHoney" onclick="()=> outOfHoney = !queen.WorkTheNextShift()">Start the next shift</button>
-            </div>
-        </div>
-        <div class="col-1 "></div>
-        <div class="col-7 ">
-            <div class="row">
-                <h1>Queen's Report</h1>
-            </div>
-            <div class="row">
-                <h3>Time Elasped: @timer</h3>
-                <textarea class="row" rows="12" cols="50" value="@queen.StatusReport" readonly></textarea>
-            </div>
-         </div>
-        
+<div class="row mb-3">
+    <div class="col-4">
+        <label for="jobSelect" class="form-label">Assign a job:</label>
+        <select id="jobSelect" class="form-select" @bind="selectedJob">
+            @foreach (var job in hive.AvailableJobs)
+            {
+                <option value="@job">@job</option>
+            }
+        </select>
+    </div>
+    <div class="col-8 d-flex align-items-end gap-2">
+        <button class="btn btn-primary" @onclick="OnAssignBee">
+            Assign Bee
+        </button>
+        <button class="btn btn-success" @onclick="OnWorkNextShift">
+            Work Next Shift
+        </button>
     </div>
 </div>
 
+<h3>Hive Status</h3>
+
+<div class="row mb-3">
+    <div class="col-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Eggs</h5>
+                <p class="card-text display-6">@hive.Eggs</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-9">
+        <table class="table table-sm table-bordered mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Unassigned</th>
+                    <th>Nectar Collectors</th>
+                    <th>Honey Manufacturers</th>
+                    <th>Egg Care</th>
+                    <th>Total Workers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@hive.UnassignedWorkers</td>
+                    <td>@hive.NectarCollectors</td>
+                    <td>@hive.HoneyManufacturers</td>
+                    <td>@hive.EggCareBees</td>
+                    <td>@hive.TotalWorkers</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3>Queen's Report</h3>
+<textarea class="form-control" rows="12" readonly>@queen.StatusReport</textarea>
+
 @code {
-    bool outOfHoney = true;
-    Queen queen = new Queen();
-    string selected@using System.Timers
-@using BeeInventory.Models
-r";
-
-@using System.Timers
-    private Timer timer = new Timer(1000);
-
+    private Hive hive = new Hive();
+    private Queen queen = default!;
+    private string selectedJob = "";
 
     protected override void OnInitialized()
     {
-        timer = new Timer(1500);
-        timer.Elapsed += Timer_Elapsed;
-        timer.Start();
-
+        queen = new Queen(hive);
+        selectedJob = hive.AvailableJobs.First();
     }
-    private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+
+    private void OnAssignBee()
     {
-        InvokeAsync(() =>
-        {
-            if (!outOfHoney)
-            {
-                outOfHoney = !queen.WorkTheNextShift();
-                StateHasChanged();
-            }
-        });
+        queen.AssignBee(selectedJob);
     }
 
+    private void OnWorkNextShift()
+    {
+        bool hiveAlive = queen.WorkTheNextShift();
 
+        if (!hiveAlive)
+        {
+            // Optional: append a warning to the report
+            queen = new Queen(hive); // or just leave it dead
+        }
+    }
 }
