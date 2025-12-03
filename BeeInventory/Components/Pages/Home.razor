@@ -83,11 +83,6 @@
     private void OnWorkNextShift()
     {
         bool hiveAlive = queen.WorkTheNextShift();
-
-        if (!hiveAlive)
-        {
-            // Optional: append a warning to the report
-            queen = new Queen(hive); // or just leave it dead
-        }
+        // Optional: react if !hiveAlive (e.g., disable buttons or show game over)
     }
 }

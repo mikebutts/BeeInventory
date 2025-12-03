@@ -1,6 +1,4 @@
-﻿
-
-namespace BeeInventory.Models
+﻿namespace BeeInventory.Models
 {
     public class EggCare : WorkerBee
     {
@@ -14,13 +12,11 @@ namespace BeeInventory.Models
 
         public override string Work(Hive hive)
         {
-            //if there are no eggs yet, just report that nothing is hatched
             if (hive.Eggs < EggsHatchedPerShift)
             {
-                return "Egg care bee tended the brood, but no eggs were ready to hatch.";
+                return "Egg care bee tended the brood, but no eggs hatched.";
             }
 
-            // use a helper on Hive to convert eggs -> workers
             hive.CareForEggs(EggsHatchedPerShift);
 
             return $"Egg care bee hatched {EggsHatchedPerShift} new worker bee.";
