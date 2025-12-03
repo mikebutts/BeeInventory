@@ -1,5 +1,4 @@
-﻿using BlazorBeehiveManagementSystem.Models;
-
+﻿
 namespace BeeInventory.Models
 {
     public abstract class Bee

@@ -1,9 +1,7 @@
-﻿using BlazorBeehiveManagementSystem.Models;
+﻿
 
 namespace BeeInventory.Models
 {
-    namespace BlazorBeehiveManagementSystem.Models
-    {
         public class WorkerBee : Bee
         {
             public WorkerBee(string job)
@@ -35,5 +33,3 @@ namespace BeeInventory.Models
             }
         }
     }
-
-}

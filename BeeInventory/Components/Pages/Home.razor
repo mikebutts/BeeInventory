@@ -30,7 +30,7 @@
                 <h1>Queen's Report</h1>
             </div>
             <div class="row">
-                
+                <h3>Time Elasped: @timer</h3>
                 <textarea class="row" rows="12" cols="50" value="@queen.StatusReport" readonly></textarea>
             </div>
          </div>
@@ -41,7 +41,9 @@
 @code {
     bool outOfHoney = true;
     Queen queen = new Queen();
-    string selectedJob = "Nector Collector";
+    string selected@using System.Timers
+@using BeeInventory.Models
+r";
 
 @using System.Timers
     private Timer timer = new Timer(1000);
