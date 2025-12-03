@@ -24,22 +24,16 @@ namespace BeeInventory.Models
             );
         }
 
-
+        
         /// Runs the next shift. Returns false if the hive ran out of honey.
-
-        //public bool WorkTheNextShift()
-        //{
-        //    string shiftReport = hive.WorkTheNextShift();
-        //    StatusReport = BuildStatusReport(shiftReport);
-
-        //    // Simple rule: hive is “dead” if honey < 0
-        //    return hive.Honey >= 0;
-        //}
-
+       
         public bool WorkTheNextShift()
         {
-            StatusReport = $"Button clicked at {DateTime.Now:HH:mm:ss}";
-            return true;
+            string shiftReport = hive.WorkTheNextShift();
+            StatusReport = BuildStatusReport(shiftReport);
+
+            // Simple rule: hive is “dead” if honey < 0
+            return hive.Honey >= 0;
         }
 
         private string BuildStatusReport(string headerLine)
