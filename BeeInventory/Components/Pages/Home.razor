@@ -2,70 +2,195 @@
 @page "/"
 @using BeeInventory.Models
 
-<h1>Beehive Management System</h1>
+<div class="bee-page container-fluid py-4">
 
-<h3>Job Assignments</h3>
-
-<div class="row mb-3">
-    <div class="col-4">
-        <label for="jobSelect" class="form-label">Assign a job:</label>
-        <select id="jobSelect" class="form-select" @bind="selectedJob">
-            @foreach (var job in hive.AvailableJobs)
-            {
-                <option value="@job">@job</option>
-            }
-        </select>
+    <!-- Hero / Header -->
+    <div class="bee-hero mb-4 rounded-3 shadow-sm px-4 py-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+        <div>
+            <h1 class="mb-1">
+                🐝 Beehive Management System
+            </h1>
+            <p class="mb-0 text-dark-50">
+                Keep your workers buzzing, nectar flowing, and honey production on track.
+            </p>
+        </div>
+        <div class="text-md-end mt-3 mt-md-0">
+            <span class="badge bee-badge fs-6">
+                Shift: @hive.ShiftNumber
+            </span>
+        </div>
     </div>
-    <div class="col-8 d-flex align-items-end gap-2">
-        <button class="btn btn-primary" @onclick="OnAssignBee">
-            Assign Bee
-        </button>
-        <button class="btn btn-success" @onclick="OnWorkNextShift">
-            Work Next Shift
-        </button>
-    </div>
-</div>
 
-<h3>Hive Status</h3>
+    <!-- Job Assignment Card -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm bee-card">
+                <div class="card-header bee-card-header">
+                    <h3 class="card-title h5 mb-0">
+                        Job Assignments
+                    </h3>
+                    <small class="text-muted">
+                        Assign workers to keep the hive running smoothly.
+                    </small>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-7">
+                            <label for="jobSelect" class="form-label fw-semibold">
+                                Assign a job:
+                            </label>
+                            <select id="jobSelect" class="form-select" @bind="selectedJob">
+                                @foreach (var job in hive.AvailableJobs)
+                                {
+                                    <option value="@job">@job</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-5 d-flex gap-2">
+                            <button class="btn bee-btn-primary flex-fill" @onclick="OnAssignBee">
+                                🐝 Assign Bee
+                            </button>
+                            <button class="btn bee-btn-success flex-fill" @onclick="OnWorkNextShift">
+                                ⏭️ Work Next Shift
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3 small text-muted">
+                        Tip: Try different combinations of collectors, manufacturers, and egg care bees to balance the hive.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="row mb-3">
-    <div class="col-3">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Eggs</h5>
-                <p class="card-text display-6">@hive.Eggs</p>
+        <!-- Resource Overview -->
+        <div class="col-lg-6 mt-4 mt-lg-0">
+            <div class="row g-3">
+                <div class="col-4">
+                    <div class="card text-center shadow-sm bee-stat-card">
+                        <div class="card-body py-3">
+                            <div class="small text-uppercase text-muted">Honey</div>
+                            <div class="display-6 fw-bold">@hive.Honey</div>
+                            <div class="small text-muted">jars</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card text-center shadow-sm bee-stat-card">
+                        <div class="card-body py-3">
+                            <div class="small text-uppercase text-muted">Nectar</div>
+                            <div class="display-6 fw-bold">@hive.Nectar</div>
+                            <div class="small text-muted">units</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card text-center shadow-sm bee-stat-card">
+                        <div class="card-body py-3">
+                            <div class="small text-uppercase text-muted">Eggs</div>
+                            <div class="display-6 fw-bold">@hive.Eggs</div>
+                            <div class="small text-muted">in nursery</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-9">
-        <table class="table table-sm table-bordered mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>Unassigned</th>
-                    <th>Nectar Collectors</th>
-                    <th>Honey Manufacturers</th>
-                    <th>Egg Care</th>
-                    <th>Total Workers</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@hive.UnassignedWorkers</td>
-                    <td>@hive.NectarCollectors</td>
-                    <td>@hive.HoneyManufacturers</td>
-                    <td>@hive.EggCareBees</td>
-                    <td>@hive.TotalWorkers</td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Worker Distribution -->
+    <div class="card shadow-sm mb-4 bee-card">
+        <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="card-title h5 mb-0">Hive Workforce</h3>
+                <small class="text-muted">Overview of worker distribution by role.</small>
+            </div>
+            <span class="badge bg-dark-subtle text-dark">
+                Total Workers: <strong>@hive.TotalWorkers</strong>
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Unassigned</th>
+                            <th>Nectar Collectors</th>
+                            <th>Honey Manufacturers</th>
+                            <th>Egg Care</th>
+                            <th>Total Workers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="badge bg-secondary-subtle text-dark">
+                                    @hive.UnassignedWorkers
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-warning-subtle text-dark">
+                                    @hive.NectarCollectors
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-warning text-dark">
+                                    @hive.HoneyManufacturers
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info-subtle text-dark">
+                                    @hive.EggCareBees
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-dark text-light">
+                                    @hive.TotalWorkers
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Simple visual “bar” for distribution -->
+            <div class="mt-3">
+                <div class="small text-muted mb-1">Workforce mix</div>
+                <div class="bee-bar d-flex overflow-hidden rounded-pill">
+                    @* We’ll roughly scale by worker counts *@
+                    <div class="bee-bar-segment bee-bar-unassigned"
+                         style="flex:@(Math.Max(hive.UnassignedWorkers, 1));"></div>
+                    <div class="bee-bar-segment bee-bar-nectar"
+                         style="flex:@(Math.Max(hive.NectarCollectors, 1));"></div>
+                    <div class="bee-bar-segment bee-bar-honey"
+                         style="flex:@(Math.Max(hive.HoneyManufacturers, 1));"></div>
+                    <div class="bee-bar-segment bee-bar-egg"
+                         style="flex:@(Math.Max(hive.EggCareBees, 1));"></div>
+                </div>
+                <div class="d-flex justify-content-between small mt-1 flex-wrap gap-2">
+                    <span><span class="legend-box bee-bar-unassigned"></span> Unassigned</span>
+                    <span><span class="legend-box bee-bar-nectar"></span> Nectar</span>
+                    <span><span class="legend-box bee-bar-honey"></span> Honey</span>
+                    <span><span class="legend-box bee-bar-egg"></span> Egg Care</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Queen's Report -->
+    <div class="card shadow-sm bee-card">
+        <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="card-title h5 mb-0">Queen's Report</h3>
+                <small class="text-muted">Latest summary from the queen.</small>
+            </div>
+            <span class="badge bee-badge">
+                👑 Queen Status
+            </span>
+        </div>
+        <div class="card-body">
+            <textarea class="form-control bee-report" rows="10" readonly>@queen.StatusReport</textarea>
+        </div>
     </div>
 </div>
-
-<h3>Queen's Report</h3>
-<textarea class="form-control" rows="12" readonly>@queen.StatusReport</textarea>
-
-
 
 @code {
     private Hive hive = new Hive();
@@ -86,9 +211,8 @@
     private void OnWorkNextShift()
     {
         bool hiveAlive = queen.WorkTheNextShift();
-        // Optional: react if !hiveAlive (e.g., disable buttons or show game over)
+
+        // Example: You could handle "game over" here later:
+        // if (!hiveAlive) { ... }
     }
-      
-
-
 }

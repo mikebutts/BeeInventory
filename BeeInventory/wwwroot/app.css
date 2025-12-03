@@ -1,4 +1,4 @@
-html, body {
+/*html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -57,4 +57,111 @@ h1:focus {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}*/
+
+
+/* Overall page background */
+.bee-page {
+    background: radial-gradient(circle at top left, #fff8d1 0, #ffffff 40%, #fffde7 100%);
+}
+
+/* Hero section */
+.bee-hero {
+    background: linear-gradient(90deg, #ffeb3b, #ffc107);
+    border: 2px solid #fbc02d;
+    color: #3b2f2f;
+}
+
+/* Generic bee cards */
+.bee-card {
+    border: 1px solid #ffe082;
+}
+
+.bee-card-header {
+    background: #fff8e1;
+    border-bottom: 1px solid #ffe082;
+}
+
+/* Stat cards */
+.bee-stat-card {
+    border: 1px solid #ffecb3;
+    background: #fffde7;
+}
+
+/* Buttons */
+.bee-btn-primary {
+    background-color: #fbc02d;
+    border-color: #f9a825;
+    color: #2b2b2b;
+}
+
+    .bee-btn-primary:hover {
+        background-color: #f9a825;
+        border-color: #f57f17;
+        color: #1b1b1b;
+    }
+
+.bee-btn-success {
+    background-color: #8bc34a;
+    border-color: #689f38;
+    color: #1b3b10;
+}
+
+    .bee-btn-success:hover {
+        background-color: #7cb342;
+        border-color: #558b2f;
+    }
+
+/* Badges */
+.bee-badge {
+    background: #000;
+    color: #ffeb3b;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+}
+
+/* Workforce bar */
+.bee-bar {
+    height: 14px;
+    border: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.bee-bar-segment {
+    height: 100%;
+}
+
+/* Colors for segments */
+.bee-bar-unassigned {
+    background: repeating-linear-gradient( 45deg, #bdbdbd, #bdbdbd 6px, #9e9e9e 6px, #9e9e9e 12px );
+}
+
+.bee-bar-nectar {
+    background: #ffe082;
+}
+
+.bee-bar-honey {
+    background: #ffca28;
+}
+
+.bee-bar-egg {
+    background: #ffecb3;
+}
+
+/* Tiny legend squares */
+.legend-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 4px;
+    border: 1px solid #bdbdbd;
+}
+
+/* Queen report textarea */
+.bee-report {
+    background: #fffdf3;
+    border-color: #fff3cd;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.9rem;
 }
