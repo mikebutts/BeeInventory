@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace BeeInventory.Models { 
@@ -38,18 +39,20 @@ namespace BeeInventory.Models {
         // --- Called by Queen.AssignBee(job) ---
         public string AssignBee(string job)
         {
-            var unassigned = bees
-                .OfType<WorkerBee>()
-                .FirstOrDefault(b => b.Job == "Idle");
+            var index = bees.FindIndex(b => b is WorkerBee w && w.Job == "Idle"); ;
 
-            if (unassigned == null)
+            if (index == -1)
                 return "No unassigned workers available.";
 
-            unassigned.AssignJob(job);
+            Bee newWorker = job switch
+            {
+                "Nectar Collector" => new NectarCollector(),
+                "Honey Manufacturer" => new HoneyManufacturer(),
+                "Egg Care" => new EggCare(),
+                _ => new WorkerBee("Idle")
+            };
 
-            // Growth mechanic from the book:
-            // assigning 1 worker increases total workers by 1 (new worker added)
-            AddNewWorker();
+            bees[index] = newWorker;
 
             return $"Assigned a worker to '{job}'.";
         }
@@ -69,31 +72,34 @@ namespace BeeInventory.Models {
             report.AppendLine($"--- Shift #{ShiftNumber} Report ---");
 
             // Each bee consumes honey
-            foreach (var bee in bees)
+            foreach (var bee in bees.ToList())          
             {
                 Honey -= bee.HoneyConsumptionRate;
             }
 
-            // If honey goes negative, hive collapses
-            if (Honey < 0)
+            if (Honey <= 0)
             {
+                Honey = 0;
                 report.AppendLine("The hive has run out of honey! Bee-nkruptcy!");
                 report.AppendLine(BuildCountsReport());
                 return report.ToString();
             }
 
+            // Queen lays eggs
+            LayEggs(1);
+
             // Bees do their work (workers override Work)
-            foreach (var worker in bees.OfType<WorkerBee>())
+            foreach (var worker in bees.OfType<WorkerBee>().ToList())   
             {
                 report.AppendLine(worker.Work(this));
             }
 
-            // End-of-shift summary
             report.AppendLine();
             report.AppendLine(BuildCountsReport());
 
             return report.ToString();
         }
+
 
         private string BuildCountsReport()
         {

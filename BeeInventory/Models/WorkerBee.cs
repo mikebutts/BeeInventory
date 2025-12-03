@@ -26,10 +26,5 @@ namespace BeeInventory.Models
                 return $"{Job} bee worked, but no specific action was defined.";
             }
 
-            // Changes this worker’s job (used when assigning a bee)
-            public void AssignJob(string job)
-            {
-                Job = job;
-            }
         }
     }
