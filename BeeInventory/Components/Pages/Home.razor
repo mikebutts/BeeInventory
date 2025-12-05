@@ -4,7 +4,7 @@
 
 <div class="bee-page container-fluid py-4">
 
-    <!-- Hero / Header -->
+    <!-- Header / Hero -->
     <div class="bee-hero mb-4 rounded-3 shadow-sm px-4 py-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
         <div>
             <h1 class="mb-1">
@@ -15,20 +15,21 @@
             </p>
         </div>
         <div class="text-md-end mt-3 mt-md-0">
-            <span class="badge bee-badge fs-6">
+            <span class="badge bee-badge fs-6 me-2">
                 Shift: @hive.ShiftNumber
+            </span>
+            <span class="badge bg-dark text-light">
+                Total Workers: @hive.TotalWorkers
             </span>
         </div>
     </div>
 
-    <!-- Job Assignment Card -->
+    <!-- CONTROL CENTER: Jobs + Shift actions -->
     <div class="row mb-4">
-        <div class="col-lg-6">
-            <div class="card shadow-sm bee-card">
+        <div class="col-lg-7">
+            <div class="card shadow-sm bee-card h-100">
                 <div class="card-header bee-card-header">
-                    <h3 class="card-title h5 mb-0">
-                        Job Assignments
-                    </h3>
+                    <h3 class="card-title h5 mb-0">Job Assignments</h3>
                     <small class="text-muted">
                         Assign workers to keep the hive running smoothly.
                     </small>
@@ -37,7 +38,7 @@
                     <div class="row g-3 align-items-end">
                         <div class="col-12 col-md-7">
                             <label for="jobSelect" class="form-label fw-semibold">
-                                Assign a job:
+                                Assign a job
                             </label>
                             <select id="jobSelect" class="form-select" @bind="selectedJob">
                                 @foreach (var job in hive.AvailableJobs)
@@ -46,7 +47,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-12 col-md-5 d-flex gap-2">
+                        <div class="col-12 col-md-5 d-flex flex-column flex-md-row gap-2">
                             <button class="btn bee-btn-primary flex-fill" @onclick="OnAssignBee">
                                 🐝 Assign Bee
                             </button>
@@ -56,189 +57,211 @@
                         </div>
                     </div>
                     <div class="mt-3 small text-muted">
-                        Tip: Try different combinations of collectors, manufacturers, and egg care bees to balance the hive.
+                        Tip: Balance collectors, manufacturers, and egg care bees to keep honey from running out.
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <h3>Upgrades</h3>
-
-        <div class="row mb-3">
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Nectar Collectors</h5>
-                        <p>Level: @hive.NectarCollectorUpgradeLevel</p>
-                        <p>Cost: @hive.NectarCollectorUpgradeCost nectar</p>
-                        <button class="btn btn-sm btn-outline-primary"
-                                @onclick="OnUpgradeNectarCollectors"
-                                disabled="@IsCollectorUpgradeDisabled">
-                            Upgrade Collectors
-                        </button>
-                    </div>
+        <!-- Quick Resources + Pause -->
+        <div class="col-lg-5 mt-4 mt-lg-0">
+            <div class="card shadow-sm bee-card h-100">
+                <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title h5 mb-0">Hive Resources</h3>
+                    <button class="@HatchingButtonClass"
+                            title="@HatchingButtonTooltip"
+                            @onclick="OnToggleHatching">
+                        @HatchingButtonText
+                    </button>
                 </div>
-            </div>
-
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Queen's Egg Laying</h5>
-                        <p>Level: @hive.QueenEggUpgradeLevel</p>
-                        <p>Cost: @hive.QueenEggUpgradeCost honey</p>
-                        <button class="btn btn-sm btn-outline-warning"
-                                @onclick="OnUpgradeQueenEggs"
-                                disabled="@IsQueenUpgradeDisabled">
-                            Upgrade Queen
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Honey Manufacturer</h5>
-                        <p>Level: @hive.HoneyManufacturerUpgradeLevel</p>
-                        <p>Cost: @hive.HoneyManufacturerUpgradeCost Nectar</p>
-                        <button class="btn btn-sm btn-outline-warning"
-                                @onclick="OnUpgradeHoneyManufacturer"
-                                disabled="@IsManufactuerUpgradeDisabled">
-                            Upgrade Queen
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Resource Overview -->
-        <div class="col-lg-6 mt-4 mt-lg-0">
-            <div class="row g-3">
-                <div class="col-4">
-                    <div class="card text-center shadow-sm bee-stat-card">
-                        <div class="card-body py-3">
-                            <div class="small text-uppercase text-muted">Honey</div>
-                            <div class="display-6 fw-bold">@hive.Honey</div>
-                            <div class="small text-muted">jars</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="card text-center shadow-sm bee-stat-card">
+                                <div class="card-body py-3">
+                                    <div class="small text-uppercase text-muted">Honey</div>
+                                    <div class="display-6 fw-bold">@hive.Honey</div>
+                                    <div class="small text-muted">jars</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card text-center shadow-sm bee-stat-card">
+                                <div class="card-body py-3">
+                                    <div class="small text-uppercase text-muted">Nectar</div>
+                                    <div class="display-6 fw-bold">@hive.Nectar</div>
+                                    <div class="small text-muted">units</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card text-center shadow-sm bee-stat-card">
+                                <div class="card-body py-3">
+                                    <div class="small text-uppercase text-muted">Eggs</div>
+                                    <div class="display-6 fw-bold">@hive.Eggs</div>
+                                    <div class="small text-muted">in nursery</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-4">
-                    <div class="card text-center shadow-sm bee-stat-card">
-                        <div class="card-body py-3">
-                            <div class="small text-uppercase text-muted">Nectar</div>
-                            <div class="display-6 fw-bold">@hive.Nectar</div>
-                            <div class="small text-muted">units</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="card text-center shadow-sm bee-stat-card">
-                        <div class="card-body py-3">
-                            <div class="small text-uppercase text-muted">Eggs</div>
-                            <div class="display-6 fw-bold">@hive.Eggs</div>
-                            <div class="small text-muted">in nursery</div>
-                        </div>
+                    <div class="small text-muted mt-2">
+                        Egg care bees hatch eggs into new idle workers when hatching is enabled.
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Worker Distribution -->
+    <!-- UPGRADES ROW -->
     <div class="card shadow-sm mb-4 bee-card">
-        <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
-            <div>
-                <h3 class="card-title h5 mb-0">Hive Workforce</h3>
-                <small class="text-muted">Overview of worker distribution by role.</small>
-            </div>
-            <span class="badge bg-dark-subtle text-dark">
-                Total Workers: <strong>@hive.TotalWorkers</strong>
-            </span>
+        <div class="card-header bee-card-header">
+            <h3 class="card-title h5 mb-0">Upgrades</h3>
+            <small class="text-muted">
+                Spend nectar and honey to make your hive more efficient.
+            </small>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Unassigned</th>
-                            <th>Nectar Collectors</th>
-                            <th>Honey Manufacturers</th>
-                            <th>Egg Care</th>
-                            <th>Total Workers</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="badge bg-secondary-subtle text-dark">
-                                    @hive.UnassignedWorkers
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-warning-subtle text-dark">
-                                    @hive.NectarCollectors
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-warning text-dark">
-                                    @hive.HoneyManufacturers
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-info-subtle text-dark">
-                                    @hive.EggCareBees
-                                </span>
-                                <button class="btn btn-sm btn-outline-info ms-2" title="pause hatching" onclick="@hive.pauseHatchingToggle">Pause</button>
-                                    ℹ️
-                            </td>
-                            <td>
-                                <span class="badge bg-dark text-light">
-                                    @hive.TotalWorkers
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Simple visual “bar” for distribution -->
-            <div class="mt-3">
-                <div class="small text-muted mb-1">Workforce mix</div>
-                <div class="bee-bar d-flex overflow-hidden rounded-pill">
-                    @* We’ll roughly scale by worker counts *@
-                    <div class="bee-bar-segment bee-bar-unassigned"
-                         style="flex:@(Math.Max(hive.UnassignedWorkers, 1));"></div>
-                    <div class="bee-bar-segment bee-bar-nectar"
-                         style="flex:@(Math.Max(hive.NectarCollectors, 1));"></div>
-                    <div class="bee-bar-segment bee-bar-honey"
-                         style="flex:@(Math.Max(hive.HoneyManufacturers, 1));"></div>
-                    <div class="bee-bar-segment bee-bar-egg"
-                         style="flex:@(Math.Max(hive.EggCareBees, 1));"></div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Nectar Collectors</h5>
+                            <p class="mb-1">Level: <strong>@hive.NectarCollectorUpgradeLevel</strong></p>
+                            <p class="mb-2 small text-muted">Cost: @hive.NectarCollectorUpgradeCost nectar</p>
+                            <button class="btn btn-sm btn-outline-primary"
+                                    @onclick="OnUpgradeNectarCollectors"
+                                    disabled="@IsCollectorUpgradeDisabled">
+                                Upgrade Collectors
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-between small mt-1 flex-wrap gap-2">
-                    <span><span class="legend-box bee-bar-unassigned"></span> Unassigned</span>
-                    <span><span class="legend-box bee-bar-nectar"></span> Nectar</span>
-                    <span><span class="legend-box bee-bar-honey"></span> Honey</span>
-                    <span><span class="legend-box bee-bar-egg"></span> Egg Care</span>
+
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Queen's Egg Laying</h5>
+                            <p class="mb-1">Level: <strong>@hive.QueenEggUpgradeLevel</strong></p>
+                            <p class="mb-2 small text-muted">Cost: @hive.QueenEggUpgradeCost honey</p>
+                            <button class="btn btn-sm btn-outline-warning"
+                                    @onclick="OnUpgradeQueenEggs"
+                                    disabled="@IsQueenUpgradeDisabled">
+                                Upgrade Queen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Honey Manufacturers</h5>
+                            <p class="mb-1">Level: <strong>@hive.HoneyManufacturerUpgradeLevel</strong></p>
+                            <p class="mb-2 small text-muted">Cost: @hive.HoneyManufacturerUpgradeCost nectar</p>
+                            <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="OnUpgradeHoneyManufacturer"
+                                    disabled="@IsManufacturerUpgradeDisabled">
+                                Upgrade Manufacturers
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Queen's Report -->
-    <div class="card shadow-sm bee-card">
-        <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
-            <div>
-                <h3 class="card-title h5 mb-0">Queen's Report</h3>
-                <small class="text-muted">Latest summary from the queen.</small>
+    <!-- WORKFORCE + QUEEN REPORT -->
+    <div class="row">
+        <!-- Workforce -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm bee-card h-100">
+                <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="card-title h5 mb-0">Hive Workforce</h3>
+                        <small class="text-muted">Overview of worker distribution by role.</small>
+                    </div>
+                    <span class="badge bg-dark-subtle text-dark">
+                        Total Workers: <strong>@hive.TotalWorkers</strong>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Unassigned</th>
+                                    <th>Nectar Collectors</th>
+                                    <th>Honey Manufacturers</th>
+                                    <th>Egg Care</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary-subtle text-dark">
+                                            @hive.UnassignedWorkers
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning-subtle text-dark">
+                                            @hive.NectarCollectors
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">
+                                            @hive.HoneyManufacturers
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info-subtle text-dark">
+                                            @hive.EggCareBees
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Workforce mix bar -->
+                    <div class="mt-3">
+                        <div class="small text-muted mb-1">Workforce mix</div>
+                        <div class="bee-bar d-flex overflow-hidden rounded-pill">
+                            <div class="bee-bar-segment bee-bar-unassigned"
+                                 style="flex:@(Math.Max(hive.UnassignedWorkers, 1));"></div>
+                            <div class="bee-bar-segment bee-bar-nectar"
+                                 style="flex:@(Math.Max(hive.NectarCollectors, 1));"></div>
+                            <div class="bee-bar-segment bee-bar-honey"
+                                 style="flex:@(Math.Max(hive.HoneyManufacturers, 1));"></div>
+                            <div class="bee-bar-segment bee-bar-egg"
+                                 style="flex:@(Math.Max(hive.EggCareBees, 1));"></div>
+                        </div>
+                        <div class="d-flex justify-content-between small mt-1 flex-wrap gap-2">
+                            <span><span class="legend-box bee-bar-unassigned"></span> Unassigned</span>
+                            <span><span class="legend-box bee-bar-nectar"></span> Nectar</span>
+                            <span><span class="legend-box bee-bar-honey"></span> Honey</span>
+                            <span><span class="legend-box bee-bar-egg"></span> Egg Care</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <span class="badge bee-badge">
-                👑 Queen Status
-            </span>
         </div>
-        <div class="card-body">
-            <textarea class="form-control bee-report" rows="10" readonly>@queen.StatusReport</textarea>
+
+        <!-- Queen's Report -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm bee-card h-100">
+                <div class="card-header bee-card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="card-title h5 mb-0">Queen's Report</h3>
+                        <small class="text-muted">Latest summary from the queen.</small>
+                    </div>
+                    <span class="badge bee-badge">
+                        👑 Queen Status
+                    </span>
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control bee-report" rows="12" readonly>@queen.StatusReport</textarea>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -250,7 +273,19 @@
 
     private bool IsCollectorUpgradeDisabled => hive.Nectar < hive.NectarCollectorUpgradeCost;
     private bool IsQueenUpgradeDisabled => hive.Honey < hive.QueenEggUpgradeCost;
-    private bool IsManufactuerUpgradeDisabled => hive.Nectar < hive.HoneyManufacturerUpgradeCost;
+    private bool IsManufacturerUpgradeDisabled => hive.Nectar < hive.HoneyManufacturerUpgradeCost;
+
+    private string HatchingButtonText =>
+        hive.IsHatchingPaused ? "▶ Resume Hatching" : "⏸ Pause Hatching";
+
+    private string HatchingButtonClass =>
+        hive.IsHatchingPaused
+            ? "btn btn-sm btn-outline-success"
+            : "btn btn-sm btn-outline-info";
+
+    private string HatchingButtonTooltip =>
+        hive.IsHatchingPaused ? "Eggs will begin hatching into new workers again." :
+                                "Temporarily stop egg hatching.";
 
     protected override void OnInitialized()
     {
@@ -266,42 +301,35 @@
     private void OnWorkNextShift()
     {
         bool hiveAlive = queen.WorkTheNextShift();
+        // optional: react to hiveAlive
     }
 
     private void OnUpgradeNectarCollectors()
     {
         if (hive.UpgradeNectarCollectors())
-        {
             queen.StatusReport = "Upgraded nectar collectors!";
-        }
         else
-        {
             queen.StatusReport = "Not enough nectar to upgrade collectors.";
-        }
     }
 
     private void OnUpgradeQueenEggs()
     {
         if (hive.UpgradeQueenEggs())
-        {
             queen.StatusReport = "Upgraded the queen's egg laying!";
-        }
         else
-        {
             queen.StatusReport = "Not enough honey to upgrade the queen.";
-        }
     }
 
     private void OnUpgradeHoneyManufacturer()
     {
         if (hive.UpgradeHoneyManufacturers())
-        {
-            queen.StatusReport = "Upgraded the honey manufacturer's";
-        }
+            queen.StatusReport = "Upgraded the honey manufacturers!";
         else
-        {
-            queen.StatusReport = "Not enough nectar to upgrade the honey manufacturer";
-        }
+            queen.StatusReport = "Not enough nectar to upgrade the honey manufacturers.";
     }
 
+    private void OnToggleHatching()
+    {
+        hive.ToggleHatchingPause();
+    }
 }

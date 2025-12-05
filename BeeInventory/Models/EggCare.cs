@@ -12,7 +12,7 @@
 
         public override string Work(Hive hive)
         {
-            if ((hive.Eggs < EggsHatchedPerShift) || (hive.pauseHatching))
+            if ((hive.Eggs < EggsHatchedPerShift) || (hive.IsHatchingPaused))
             {
                 return "Egg care bee tended the brood, but no eggs hatched.";
             }

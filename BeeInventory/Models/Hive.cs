@@ -15,7 +15,7 @@ namespace BeeInventory.Models {
         public int NectarCollectorUpgradeCost => 25 * NectarCollectorUpgradeLevel;
         public int QueenEggUpgradeCost => 30 * QueenEggUpgradeLevel;
         public int HoneyManufacturerUpgradeCost => 20 * HoneyManufacturerUpgradeLevel;
-        public bool pauseHatching = false;
+        public bool IsHatchingPaused = false;
 
         private readonly List<Bee> bees = new();
 
@@ -65,9 +65,9 @@ namespace BeeInventory.Models {
 
             return $"Assigned a worker to '{job}'.";
         }
-        public void pauseHatchingToggle()
+        public void ToggleHatchingPause()
         {
-            pauseHatching = !pauseHatching;
+            IsHatchingPaused = !IsHatchingPaused;
         }
 
         private void AddNewWorker()
