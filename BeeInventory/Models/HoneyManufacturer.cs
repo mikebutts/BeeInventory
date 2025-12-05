@@ -5,6 +5,7 @@
         // Book/GitHub numbers:
         // Uses 2 nectar → produces 1 honey
         private const int NectarConsumedPerShift = 2;
+        
         private const int HoneyProducedPerShift = 1;
 
         public HoneyManufacturer() : base("Honey Manufacturer")
@@ -22,10 +23,11 @@
                 return "Honey manufacturer found no nectar to convert.";
             }
 
-            // Convert nectar → honey through Hive's helper
-            hive.ConvertNectarToHoney(
+            int amount = HoneyProducedPerShift * hive.HoneyManufacturerUpgradeLevel;
+        // Convert nectar → honey through Hive's helper
+        hive.ConvertNectarToHoney(
                 NectarConsumedPerShift,
-                HoneyProducedPerShift
+                amount
             );
 
             return $"Honey manufacturer converted {NectarConsumedPerShift} nectar into {HoneyProducedPerShift} honey.";
