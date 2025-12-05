@@ -24,6 +24,8 @@ namespace BeeInventory.Models
             );
         }
 
+
+
         
         /// Runs the next shift. Returns false if the hive ran out of honey.
        

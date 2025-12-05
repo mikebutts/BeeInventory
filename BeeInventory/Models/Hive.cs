@@ -10,9 +10,11 @@ namespace BeeInventory.Models {
     {
         public int NectarCollectorUpgradeLevel { get; private set; } = 1;
         public int QueenEggUpgradeLevel { get; private set; } = 1;
+        public int HoneyManufacturerUpgradeLevel { get; private set; } = 1;
         // Stater basic costs , can be adjusted
         public int NectarCollectorUpgradeCost => 25 * NectarCollectorUpgradeLevel;
         public int QueenEggUpgradeCost => 30 * QueenEggUpgradeLevel;
+        public int HoneyManufacturerUpgradeCost => 20 * HoneyManufacturerUpgradeLevel;
 
 
         private readonly List<Bee> bees = new();
@@ -107,6 +109,19 @@ namespace BeeInventory.Models {
             return report.ToString();
         }
 
+        public bool UpgradeHoneyManufacturers()
+        {
+            if (Nectar < HoneyManufacturerUpgradeCost)
+            {
+                return false;
+            }
+            else
+            {
+                Nectar -= HoneyManufacturerUpgradeCost;
+                HoneyManufacturerUpgradeLevel++;
+                return true;
+            }
+        }
         public bool UpgradeNectarCollectors()
         {
             if (Nectar < NectarCollectorUpgradeCost)

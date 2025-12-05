@@ -61,10 +61,12 @@
                 </div>
             </div>
         </div>
+
+
         <h3>Upgrades</h3>
 
         <div class="row mb-3">
-            <div class="col-6">
+            <div class="col-2">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Nectar Collectors</h5>
@@ -72,14 +74,14 @@
                         <p>Cost: @hive.NectarCollectorUpgradeCost nectar</p>
                         <button class="btn btn-sm btn-outline-primary"
                                 @onclick="OnUpgradeNectarCollectors"
-                                disabled="@hive.Nectar < hive.NectarCollectorUpgradeCost)">
+                                disabled="@IsCollectorUpgradeDisabled">
                             Upgrade Collectors
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-2">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Queen's Egg Laying</h5>
@@ -87,7 +89,21 @@
                         <p>Cost: @hive.QueenEggUpgradeCost honey</p>
                         <button class="btn btn-sm btn-outline-warning"
                                 @onclick="OnUpgradeQueenEggs"
-                                disabled="@(hive.Honey < hive.QueenEggUpgradeCost)">
+                                disabled="@IsQueenUpgradeDisabled">
+                            Upgrade Queen
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Honey Manufacturer</h5>
+                        <p>Level: @hive.HoneyManufacturerUpgradeLevel</p>
+                        <p>Cost: @hive.HoneyManufacturerUpgradeCost Nectar</p>
+                        <button class="btn btn-sm btn-outline-warning"
+                                @onclick="OnUpgradeHoneyManufacturer"
+                                disabled="@IsManufactuerUpgradeDisabled">
                             Upgrade Queen
                         </button>
                     </div>
@@ -230,6 +246,10 @@
     private Queen queen = default!;
     private string selectedJob = "";
 
+    private bool IsCollectorUpgradeDisabled => hive.Nectar < hive.NectarCollectorUpgradeCost;
+    private bool IsQueenUpgradeDisabled => hive.Honey < hive.QueenEggUpgradeCost;
+    private bool IsManufactuerUpgradeDisabled => hive.Nectar < hive.HoneyManufacturerUpgradeCost;
+
     protected override void OnInitialized()
     {
         queen = new Queen(hive);
@@ -267,6 +287,18 @@
         else
         {
             queen.StatusReport = "Not enough honey to upgrade the queen.";
+        }
+    }
+
+    private void OnUpgradeHoneyManufacturer()
+    {
+        if (hive.UpgradeHoneyManufacturers())
+        {
+            queen.StatusReport = "Upgraded the honey manufacturer's";
+        }
+        else
+        {
+            queen.StatusReport = "Not enough nectar to upgrade the honey manufacturer";
         }
     }
 
