@@ -24,9 +24,10 @@
             }
 
             int amount = HoneyProducedPerShift * hive.HoneyManufacturerUpgradeLevel;
-        // Convert nectar → honey through Hive's helper
-        hive.ConvertNectarToHoney(
-                NectarConsumedPerShift,
+            int consumption = NectarConsumedPerShift * hive.HoneyManufacturerUpgradeLevel;
+            // Convert nectar → honey through Hive's helper
+            hive.ConvertNectarToHoney(
+                consumption,
                 amount
             );
 
