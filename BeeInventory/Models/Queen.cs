@@ -12,7 +12,7 @@ namespace BeeInventory.Models
             StatusReport = "The queen is ready.";
         }
 
-        public string StatusReport { get; private set; }
+        public string StatusReport { get; set; } = "The queen is ready.";
 
         public void AssignBee(string selectedJob)
         {

@@ -8,6 +8,13 @@ using System.Text;
 namespace BeeInventory.Models { 
     public class Hive
     {
+        public int NectarCollectorUpgradeLevel { get; private set; } = 1;
+        public int QueenEggUpgradeLevel { get; private set; } = 1;
+        // Stater basic costs , can be adjusted
+        public int NectarCollectorUpgradeCost => 25 * NectarCollectorUpgradeLevel;
+        public int QueenEggUpgradeCost => 30 * QueenEggUpgradeLevel;
+
+
         private readonly List<Bee> bees = new();
 
         public int Honey { get; private set; } = 25;
@@ -86,7 +93,7 @@ namespace BeeInventory.Models {
             }
 
             // Queen lays eggs
-            LayEggs(1);
+            LayEggs();
 
             // Bees do their work (workers override Work)
             foreach (var worker in bees.OfType<WorkerBee>().ToList())   
@@ -100,6 +107,30 @@ namespace BeeInventory.Models {
             return report.ToString();
         }
 
+        public bool UpgradeNectarCollectors()
+        {
+            if (Nectar < NectarCollectorUpgradeCost)
+            {
+                return false;
+
+            }
+            else
+            {
+                Nectar -= NectarCollectorUpgradeCost;
+                NectarCollectorUpgradeLevel++;
+                return true;
+            }
+        }
+
+        public bool UpgradeQueenEggs()
+        {
+            if (Honey < QueenEggUpgradeCost)
+                return false;
+
+            Honey -= QueenEggUpgradeCost;
+            QueenEggUpgradeLevel++;
+            return true;
+        }
 
         private string BuildCountsReport()
         {
@@ -131,8 +162,9 @@ namespace BeeInventory.Models {
             }
         }
 
-        public void LayEggs(int eggsLaid)
+        public void LayEggs()
         {
+            int eggsLaid = QueenEggUpgradeLevel;  // base 1 egg per level
             Eggs += eggsLaid;
         }
 

@@ -14,8 +14,10 @@
 
         public override string Work(Hive hive)
         {
-            hive.CollectNectar(NectarPerShift);
-            return $"Nectar collector gathered {NectarPerShift} nectar.";
+            int amount = NectarPerShift * hive.NectarCollectorUpgradeLevel;
+            hive.CollectNectar(amount);
+            return $"Nectar collector gathered {amount} nectar.";
         }
+
     }
 }

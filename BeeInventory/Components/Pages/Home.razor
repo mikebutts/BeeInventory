@@ -61,6 +61,39 @@
                 </div>
             </div>
         </div>
+        <h3>Upgrades</h3>
+
+        <div class="row mb-3">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Nectar Collectors</h5>
+                        <p>Level: @hive.NectarCollectorUpgradeLevel</p>
+                        <p>Cost: @hive.NectarCollectorUpgradeCost nectar</p>
+                        <button class="btn btn-sm btn-outline-primary"
+                                @onclick="OnUpgradeNectarCollectors"
+                                disabled="@hive.Nectar < hive.NectarCollectorUpgradeCost)">
+                            Upgrade Collectors
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Queen's Egg Laying</h5>
+                        <p>Level: @hive.QueenEggUpgradeLevel</p>
+                        <p>Cost: @hive.QueenEggUpgradeCost honey</p>
+                        <button class="btn btn-sm btn-outline-warning"
+                                @onclick="OnUpgradeQueenEggs"
+                                disabled="@(hive.Honey < hive.QueenEggUpgradeCost)">
+                            Upgrade Queen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Resource Overview -->
         <div class="col-lg-6 mt-4 mt-lg-0">
@@ -211,8 +244,30 @@
     private void OnWorkNextShift()
     {
         bool hiveAlive = queen.WorkTheNextShift();
-
-        // Example: You could handle "game over" here later:
-        // if (!hiveAlive) { ... }
     }
+
+    private void OnUpgradeNectarCollectors()
+    {
+        if (hive.UpgradeNectarCollectors())
+        {
+            queen.StatusReport = "Upgraded nectar collectors!";
+        }
+        else
+        {
+            queen.StatusReport = "Not enough nectar to upgrade collectors.";
+        }
+    }
+
+    private void OnUpgradeQueenEggs()
+    {
+        if (hive.UpgradeQueenEggs())
+        {
+            queen.StatusReport = "Upgraded the queen's egg laying!";
+        }
+        else
+        {
+            queen.StatusReport = "Not enough honey to upgrade the queen.";
+        }
+    }
+
 }
